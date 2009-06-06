@@ -81,4 +81,19 @@ context "Rack::Builder" do
     Rack::MockRequest.new(app).get("/").should.be.server_error
   end
 
+  specify "can parse .ru files" do
+    app = Rack::Builder.parse(File.dirname(__FILE__) + '/../example/lobster.ru')
+
+    Rack::MockRequest.new(app).get("/").status.should.equal 200
+    Rack::MockRequest.new(app).get("/").body.should.match /Lobstericious/
+  end
+
+  specify "can parse .rb files" do
+    app = Rack::Builder.parse(File.dirname(__FILE__) + '/../example/simple.rb')
+
+    Rack::MockRequest.new(app).get("/").status.should.equal 200
+    Rack::MockRequest.new(app).get("/").body.should.equal "Simple!"
+  end
+
+
 end
